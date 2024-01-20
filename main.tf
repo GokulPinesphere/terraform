@@ -27,17 +27,16 @@ resource "aws_instance" "myinstance" {
   instance_type          = "t2.micro"
   key_name               = "securekey"             # Update with your SSH key pair name
   vpc_security_group_ids = [aws_security_group.secure.id]
-
+  associate_public_ip_address = true
   user_data = <<-EOF
               #!/bin/bash
-              sudo apt-get update -y
-              sudo apt-get install -y tomcat9
+              apt-get update -y
+              apt-get install -y default-jdk
 
-              # Configure Tomcat to run on port 8080
-              sudo sed -i 's/Connector port="8080"/Connector port="8080"/g' /etc/tomcat9/server.xml
-
-              # Restart Tomcat
-              sudo service tomcat9 restart
+              # Install Tomcat
+              apt-get install -y tomcat9
+              systemctl start tomcat9
+              systemctl enable tomcat9
               EOF
 }
 
