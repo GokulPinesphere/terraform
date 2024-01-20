@@ -29,14 +29,16 @@ resource "aws_instance" "myinstance" {
   vpc_security_group_ids = [aws_security_group.secure.id]
 
   user_data = <<-EOF
-             #!/bin/bash
-             sudo apt-get update -y
-             sudo apt-get install -y default-jdk
-             sudo apt-get install -y tomcat9
-             # Update Tomcat server port to 8081
-             sudo sed -i 's/8080/8081/g' /etc/tomcat9/server.xml
-             sudo systemctl restart tomcat9
-             EOF
+              #!/bin/bash
+              sudo apt-get update -y
+              sudo apt-get install -y tomcat9
+
+              # Configure Tomcat to run on port 8080
+              sudo sed -i 's/Connector port="8080"/Connector port="8080"/g' /etc/tomcat9/server.xml
+
+              # Restart Tomcat
+              sudo service tomcat9 restart
+              EOF
 }
 
 resource "aws_eip" "myinstance" {
