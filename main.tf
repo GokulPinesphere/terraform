@@ -24,16 +24,44 @@ resource "aws_security_group" "secure" {
 # Create an EC2 instance
 resource "aws_instance" "myinstance" {
   ami                    = "ami-03f4878755434977f" # Update with your desired AMI ID
+ instance_type          = "t2.micro"
+  key_name               = "securekey"             # Update with your SSH key pair name
+  vpc_security_group_ids = [aws_security_group.secure.id]
+  associate_public_ip_address = true
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("path/to/your/private-key.pem")
+    host        = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "sudo apt install -y openjdk-11-jdk",
+    ]
+  }
+}
+
+resource "aws_instance" "myinstance" {
+  ami                    = "ami-xxxxxxxxxxxxxxxxx" # Update with your desired AMI ID
   instance_type          = "t2.micro"
   key_name               = "securekey"             # Update with your SSH key pair name
   vpc_security_group_ids = [aws_security_group.secure.id]
   associate_public_ip_address = true
-  
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("path/to/your/private-key.pem")
+    host        = self.public_ip
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "sudo apt update -y",
-      "sudo apt install -y default-jdk", # Changed "java" to "default-jdk"
-      "sudo apt install -y tomcat8",    # Changed "tomcat" to "tomcat8"
+      "sudo apt update",
+      "sudo apt install -y openjdk-11-jdk",
     ]
   }
 }
