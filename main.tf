@@ -28,13 +28,23 @@ resource "aws_instance" "myinstance" {
   key_name               = "securekey"             # Update with your SSH key pair name
   vpc_security_group_ids = [aws_security_group.secure.id]
   
-  provisioner "remote-exec" {
+ /* provisioner "remote-exec" {
     inline = [ 
       "sudo apt-get update -y",
       "sudo apt-get install -y default-jdk",
       "sudo apt-get install -y tomcat9",
    ]
-  }
+  }*/
+  user_data = <<-EOF
+              #!/bin/bash
+              apt-get update -y
+              apt-get install -y default-jdk
+
+              # Install Tomcat
+              apt-get install -y tomcat9
+              systemctl start tomcat9
+              systemctl enable tomcat9
+              EOF
 }
 
 resource "aws_eip" "myinstance" {
