@@ -31,7 +31,7 @@ resource "aws_instance" "myinstance" {
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("path/to/your/private-key.pem")  # Update with the correct path
+    private_key = file("path/to/your/securekey.pem")  # Update with the correct path
     host        = self.public_ip
   }
 
