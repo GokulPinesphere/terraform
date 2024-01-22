@@ -32,8 +32,8 @@ resource "aws_instance" "myinstance" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt update -y",
-      "sudo apt install -y java",
-      "sudo apt install -y tomcat",
+      "sudo apt install -y default-jdk", # Changed "java" to "default-jdk"
+      "sudo apt install -y tomcat8",    # Changed "tomcat" to "tomcat8"
     ]
   }
 }
