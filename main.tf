@@ -27,19 +27,13 @@ resource "aws_instance" "myinstance" {
   instance_type          = "t2.micro"
   key_name               = "securekey"             # Update with your SSH key pair name
   vpc_security_group_ids = [aws_security_group.secure.id]
-  associate_public_ip_address = true
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = file("path/to/your/securekey.pem")  # Update with the correct path
-    host        = self.public_ip
-  }
-
+  
   provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "sudo apt install -y openjdk-11-jdk",
-    ]
+    inline = [ 
+      "sudo apt-get update -y",
+      "sudo apt-get install -y default-jdk",
+      "sudo apt-get install -y tomcat9",
+   ]
   }
 }
 
