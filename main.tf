@@ -2,8 +2,8 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-resource "aws_security_group" "secureway" {
-  name        = "secureway"
+resource "aws_security_group" "secure" {
+  name        = "secure"
   description = "Allow inbound SSH and HTTP traffic"
 
   ingress {
@@ -26,10 +26,11 @@ resource "aws_instance" "myinstance" {
   ami                    = "ami-03f4878755434977f" 
   instance_type          = "t2.micro"
   key_name               = "securekey"             
-  vpc_security_group_ids = [aws_security_group.secureway.id]
+  vpc_security_group_ids = [aws_security_group.secure.id]
+ 
   }
 
-resource "aws_eip" "myinstance" {
+resource "aws_eip" "myeip" {
   instance = aws_instance.myinstance.id
 }
 
