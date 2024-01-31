@@ -81,6 +81,12 @@ resource "aws_instance" "ec2_instance" {
   
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
 subnet_id = aws_subnet.subnet_az1.id
+provisioner "remote-exec" {
+  inline = [ 
+     "sudo apt update",
+      "sudo apt install -y openjdk-11-jdk",  # Install OpenJDK 11
+   ]
+}
   tags = {
     Name = "ec2-instance-${count.index + 1}"
   }
