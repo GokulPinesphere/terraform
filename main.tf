@@ -54,7 +54,12 @@ resource "aws_security_group" "instance_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+   ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_lb" "my_alb" {
@@ -78,18 +83,30 @@ resource "aws_instance" "ec2_instance" {
   ami           = "ami-03f4878755434977f"
 
   instance_type = "t2.micro"
-  
+  key_name = "key-for-demo-1"
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
 subnet_id = aws_subnet.subnet_az1.id
 provisioner "remote-exec" {
-  inline = [ 
-     "sudo apt update",
+    inline = [ 
+      "sudo apt update",
       "sudo apt install -y openjdk-11-jdk",  # Install OpenJDK 11
-   ]
-}
+    ]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"  // or the appropriate username for your AMI
+    private_key = file("/home/ubuntu/key-for-demo-1")
+    host        = self.public_ip
+  }
   tags = {
     Name = "ec2-instance-${count.index + 1}"
   }
+}
+
+resource "aws_key_pair" "demo" {
+  key_name = "key-for-demo-1"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCpXBXyniuB2vDjWjSAH5I9IvFtxyub4c28fR/a3hP77iWNVsITFLj75hYZAI3HHmflBRznAiCFUaLRjmUAvJLhAFtfcWhXYis8iYI7M75bJa9CC9PR+GqK4s5pO1t+Hw3AxbAAt8anZOeUwNT3ddoExIOZeWxvj7IbmcubLCDYcSM4+1ZgXhUc+mjK2Ac7VdHooysYpd70OZ8tP944XCN7h+T40aSyMaWJmyiIEMQ1Hhvreg24pu6MBtGYwyFEhFrrnA61KNzI5mxizO1JRF59b6Gchmwsb0O+tB8EIcaBgtj8I99mvl4TiMDQuEk4unwg1hm79KGNFBX67m0FR50T"
 }
 
 resource "aws_lb_target_group" "my_target_group" {
