@@ -97,7 +97,7 @@ provisioner "remote-exec" {
     type        = "ssh"
     user        = "ec2-user"  // or the appropriate username for your AMI
     private_key = file("~/.ssh/id_rsa")
-    host        = aws_instance.ec2_instance.public_ip
+    host        = self.public_ip
   }
   tags = {
     Name = "ec2-instance-${count.index + 1}"
