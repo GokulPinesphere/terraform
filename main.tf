@@ -83,7 +83,7 @@ resource "aws_instance" "ec2_instance" {
   ami           = "ami-03f4878755434977f"
 
   instance_type = "t2.micro"
-  key_name = "key-1"
+  
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
 subnet_id = aws_subnet.subnet_az1.id
 provisioner "remote-exec" {
@@ -96,7 +96,7 @@ provisioner "remote-exec" {
   connection {
     type        = "ssh"
     user        = "ec2-user"  // or the appropriate username for your AMI
-    private_key = file("C:/Users/Gokul Sundaramoorthi/Downloads/key-1")
+    private_key = file("~/.ssh/id_rsa")
     host        = self.public_ip
   }
   tags = {
@@ -104,10 +104,7 @@ provisioner "remote-exec" {
   }
 }
 
-resource "aws_key_pair" "demo" {
-  key_name = "key-1"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDl1En+1uPFXgL5w3UD38AAqMTeGWciUa/yRsebc4DWC4OnMuiJU1lVTpc4X3kyhLJNQmEdpk+/y8bdOAR887XVqJCzWzZ2l2bscDreVJe0+ENprFsVEU83nv4mpg5MCvgJgCpgRYb2ESNen2L+J2rxswheV+3tqDllJWOqCcXo2tsrl5WT830o0Qeh0LaEXNNAWWI7aAzOHUc//8mQRZAfWRAWKK62Cq+zQXDbkJqDUGLB7Cb5ptLYaaTohaE/Y/jnGI84ANIlqc6k/DWMqIoHwpcd0M6AqiJZkHsnH6TtZNOx+5ZtitF7HCDz/ygEs3IOcNRvGVuYLFnoUD+uTmST gokul sundaramoorthi@DESKTOP-IVKTDVP"
-}
+
 
 resource "aws_lb_target_group" "my_target_group" {
   name     = "my-target-group"
