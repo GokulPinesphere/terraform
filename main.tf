@@ -96,7 +96,7 @@ provisioner "remote-exec" {
   connection {
     type        = "ssh"
     user        = "ec2-user"  // or the appropriate username for your AMI
-    private_key = file("ssh -i "/home/ubuntu/.ssh/id_rsa")
+    private_key = file("/home/ubuntu/.ssh/id_rsa")
     host        = self.public_ip
   }
   tags = {
