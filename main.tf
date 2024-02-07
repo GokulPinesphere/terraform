@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_key_pair" "demo" {
   key_name = "key-1"
-  public_key = file("F:/Terraform/Keys/key-1.pub")
+  public_key = file("/home/ubuntu/.ssh/key-1.pub")
 }
 
 resource "aws_vpc" "My-VPC-AWS-vpc" {
@@ -115,7 +115,7 @@ resource "aws_instance" "ec2_instance" {
   connection {
         type        = "ssh"
         user        = "ubuntu" 
-        private_key = file("F:/Terraform/Keys/key-1")
+        private_key = file("/home/ubuntu/.ssh/key-1")
         host        = self.public_ip
     }
   provisioner "remote-exec" {
@@ -130,7 +130,7 @@ resource "aws_instance" "ec2_instance" {
   }
 
   provisioner "file" {
-    source      = "C:/Users/vasan/Downloads/sample.war"
+    source      = "/home/ubuntu/warfile/jenkins_workflow/sample.war"
     destination = "/opt/tomcat9/webapps/sample.war"
   }
     tags = {
