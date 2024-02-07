@@ -109,7 +109,7 @@ resource "aws_instance" "ec2_instance" {
   count = 2
   ami           = "ami-03f4878755434977f"
   instance_type = "t2.micro"
-  key_name = "key-1"
+  key_name = aws_key_pair.demo.key_name
   vpc_security_group_ids = [aws_security_group.instance_sg.id]
   subnet_id     = count.index == 0 ? aws_subnet.subnet_az1.id : aws_subnet.subnet_az2.id
   connection {
